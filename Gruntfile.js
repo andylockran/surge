@@ -502,7 +502,7 @@ module.exports = function (grunt) {
     'htmlmin'
   ]);
 
-  grunt.registerTask('deploy', ['surge']);
+  grunt.registerTask('deploy', ['default','surge']);
 
   grunt.registerTask('default', [
     'newer:jshint',
