@@ -41,10 +41,11 @@ angular
         controller: 'BlogCtrl',
         controllerAs: 'blog'
       })
+
       .when('/blog/:page', {
-        templateUrl: 'views/blog.html',
-        controller: 'BlogCtrl',
-        controllerAs: 'blog'
+        templateUrl: 'views/blogdetail.html',
+        controller: 'BlogdetailCtrl',
+        controllerAs: 'blogdetail'
       })
       .otherwise({
         redirectTo: '/'

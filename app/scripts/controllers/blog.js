@@ -8,48 +8,38 @@
  * Controller of the alcoukApp
  */
 angular.module('alcoukApp')
-  .controller('BlogCtrl', function ($http,$scope,$route,$routeParams,$location) {
-  	if ($routeParams.page) {
-  		$scope.page = $routeParams.page;	
-  	}
-  	else {
-  		$scope.page=1;
-  	}
-  	
-    $http({
-    	method: 'GET',
-    	url: "http://www.andyloughran.co.uk/wp-json/wp/v2/posts?filter[posts_per_page]=9&page="+$scope.page
-    })
-    .success(function(response,status,headers)
-    	{
-    		$scope.maxposts = Math.round(parseInt(headers('X-WP-Total'))/9);
-    		if (response.length === 0) 
-    		{
-    			$scope.blogs = "";
-    		}
-    		else {
-    			$scope.blogs = response;
-    			var range = [];
-			  	var top = parseInt($scope.page) + 5;
-			  	if (top > $scope.maxposts) {
-			  		top = parseInt($scope.maxposts)+1;
-			  	}
-          var bottom = parseInt($scope.page) -3;
-          if (bottom < 1) {
-            bottom = 1;
-          }
-			  	for (var i=bottom;i<top;i++) {
-			  		range.push(i);
-			  	}
-			  	$scope.paginate = range;
-	    		}
-	    	}
-      );
+  .controller('BlogCtrl', function ($http,$scope,$route,$routeParams,blogService) {
+  	$scope.page=1;
+    blogService.headers({page:$scope.page}).$promise
+    .then(function(data){
+      var maxposts = Math.round(parseInt(data.total)/9);
+      $scope.maxposts = maxposts;
+    });
+   
+
+    function paginate () {
+        var range = [];
+        var top = parseInt($scope.page) + 5;
+        var maxposts = $scope.maxposts;
+        if (top > maxposts) {
+          top = parseInt(maxposts)+1;
+        }
+        var bottom = parseInt($scope.page) -3;
+        if (bottom < 1) {
+          bottom = 1;
+        }
+        for (var i=bottom;i<top;i++) {
+          range.push(i);
+        }
+        $scope.paginate = range;
+    }
 
     $scope.loadPage = function () {
-    	var current = "/blog" + '/' + $scope.page;
-    	$location.path(current);
+        $scope.blogs = blogService.query({page:$scope.page});
+        paginate();
     };
+
+    $scope.loadPage();
 
     $scope.nextPage = function() {
         $scope.page++;
@@ -67,7 +57,9 @@ angular.module('alcoukApp')
         }
     };
     $scope.menuClass = function(page) {
-      var current = $location.path().substring(1);
+      var current = $scope.page;
+      page = parseInt(page);
+      console.log(typeof page);
       return page === current ? "active" : "";
      };
   });

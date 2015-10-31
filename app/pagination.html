@@ -1,7 +1,10 @@
-<ul class="pager pagination-lg">
-	<li><a ng-if="page > 1" ng-click='thisPage(1)'>Home</a></li>
+<div class"row pull-right">
+<p class="pull-right">Page {{page}} of {{maxposts}}</p>
+</div>
+<ul class="pager pagination-sm">
+	<li><a ng-if="page > 1" ng-click='thisPage(1)'>First</a></li>
     <li><a ng-if="page > 1" ng-click='previousPage()'>Previous</a></li>
-    <li ng-repeat="i in paginate"><a ng-click='thisPage(i)' ng-class="menuClass('blog/{{i}}')">{{i}}</a></li>
+    <li ng-repeat="i in paginate"><a ng-click='thisPage(i)' ng-class="menuClass('{{i}}')">{{i}}</a></li>
     <li><a ng-if="blogs.length > 8" ng-click='nextPage()'>Next</a></li>
     <li><a ng-if="page < maxposts" ng-click='thisPage(maxposts)'>Last</a></li>
 </ul>
